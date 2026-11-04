@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Valentin Guilbert, triathlète à Montréal. Première saison 2026 : quatre courses, trois pays, premier 70.3 en 4:42:24. Contact partenariats.">
+<meta property="og:title" content="Valentin Guilbert · Triathlète">
+<meta property="og:description" content="Première saison de triathlon. Premier 70.3 en 4:42:24. Partenariats : valentin.guilbert50@gmail.com">
+<meta property="og:image" content="img/nage-sortie.jpg">
+<meta property="og:type" content="website">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Valentin Guilbert Triathlon</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..700&family=Geist+Mono:wght@300..500&display=swap">
+<style>
+/* Concept: endurance, in black and white. One thin GPS-like course line draws itself through the whole page as you scroll; a quiet watch HUD counts km 0→113 and the clock to 4:42:24. Single typeface family, light weights. */
+:root{
+  --paper:#f4f4f2; --ink:#0b0b0b; --g1:#6b6b6b; --g2:#b5b5b2; --rule:rgba(11,11,11,.14);
+  --f:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --m:"Geist Mono",ui-monospace,Menlo,Consolas,monospace;
+  --gut:max(20px,env(safe-area-inset-left,0px)); --gutr:max(20px,env(safe-area-inset-right,0px));
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f);font-weight:300;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+main{position:relative;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,p{margin:0;font-weight:inherit}
+::selection{background:var(--ink);color:var(--paper)}
+:focus-visible{outline:1px solid currentColor;outline-offset:5px}
+.pad{padding-left:var(--gut);padding-right:var(--gutr)}
+.mono{font-family:var(--m);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:400}
+.dim{color:var(--g1)}
+.dark{background:var(--ink);color:var(--paper);--g1:#8d8d8a;--g2:#3a3a38;--rule:rgba(244,244,242,.16)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+
+/* course line */
+#course{position:absolute;left:0;top:0;width:100%;z-index:5;pointer-events:none;mix-blend-mode:difference;overflow:visible}
+#course path{fill:none;stroke:#fff;stroke-width:1}
+#course .ghost{stroke:rgba(255,255,255,.16);stroke-dasharray:2 6}
+#head circle{fill:#fff}
+#head text{fill:#fff;font:400 11px var(--m);letter-spacing:.06em}
+
+/* HUD */
+.hud{position:fixed;inset:0;z-index:30;pointer-events:none;mix-blend-mode:difference;color:#fff;padding:calc(20px + env(safe-area-inset-top,0px)) var(--gutr) calc(20px + env(safe-area-inset-bottom,0px)) var(--gut);display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto}
+.hud a{pointer-events:auto}
+.hud .logo{font-weight:500;letter-spacing:-.02em;font-size:1rem}
+.hud nav{justify-self:end;display:flex;gap:26px}
+.hud nav a{position:relative}
+.hud nav a::after{content:"";position:absolute;left:0;bottom:-4px;width:100%;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .6s var(--ease)}
+.hud nav a:hover::after{transform:scaleX(1);transform-origin:left}
+.hud .bl,.hud .br{grid-row:3;align-self:end;font-family:var(--m);font-variant-numeric:tabular-nums}
+.hud .br{justify-self:end;text-align:right}
+.hud .v{display:block;font-size:clamp(1.05rem,1.6vw,1.35rem);font-weight:300;letter-spacing:-.01em;margin-top:4px}
+@media (max-width:640px){.hud nav a:not(.keep){display:none}}
+
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:space-between;padding-block:calc(110px + env(safe-area-inset-top,0px)) 130px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:6px 40px}
+.title{font-weight:200;letter-spacing:-.065em;line-height:.86;font-size:clamp(4rem,16.5vw,19rem)}
+.title .ln{display:block;overflow:hidden;padding-bottom:.06em}
+.title .ln.r{text-align:right}
+.title .ch{display:inline-block}
+@media (prefers-reduced-motion: no-preference){
+  .title .ch{animation:ch 1.4s var(--ease) both;animation-delay:calc(var(--i) * 45ms + .1s)}
+  @keyframes ch{from{transform:translateY(105%)}to{transform:none}}
+  .hero .meta,.hero .foot{animation:fade 1.6s .9s var(--ease) both}
+  @keyframes fade{from{opacity:.0;transform:translateY(12px)}to{opacity:1;transform:none}}
+}
+.hero{position:relative}
+.hero-img{position:absolute!important;right:var(--gutr);top:calc(96px + env(safe-area-inset-top,0px));bottom:110px;width:min(34vw,540px);z-index:1}
+.hero .title,.hero .meta,.hero .foot{position:relative;z-index:2}
+.hero .title{mix-blend-mode:difference;color:#fff}
+@media (prefers-reduced-motion: no-preference){
+  .hero-img{animation:wipe 1.6s .25s var(--ease) both}
+  .hero-img img{animation:zoom 2.4s .25s var(--ease) both}
+  @keyframes wipe{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+  @keyframes zoom{from{transform:scale(1.3)}to{transform:none}}
+}
+@media (max-width:760px){.hero-img{width:58vw;top:150px;bottom:170px}}
+.hero .foot{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
+.hero .foot p{font-size:clamp(1rem,1.5vw,1.25rem);max-width:30ch}
+
+/* section heads */
+.sh{display:grid;grid-template-columns:1fr 3fr;gap:24px;align-items:baseline;padding-block:clamp(110px,16vw,240px) clamp(40px,6vw,80px)}
+.sh h2{font-weight:200;letter-spacing:-.055em;line-height:.9;font-size:clamp(3rem,9vw,9.5rem)}
+@media (max-width:760px){.sh{grid-template-columns:1fr}}
+
+/* profile */
+.profile{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;padding-bottom:clamp(100px,14vw,200px)}
+.statement{grid-column:4 / -1;font-weight:250;font-size:clamp(1.8rem,4.4vw,4.2rem);line-height:1.08;letter-spacing:-.04em}
+.statement b{font-weight:500}
+.statement .ln{display:block}
+.portrait{grid-column:1 / span 5;margin-top:clamp(40px,7vw,100px);aspect-ratio:4/5}
+.facts{grid-column:7 / -1;align-self:end;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin:0;border-top:1px solid var(--rule)}
+.facts div{padding:18px 0;border-bottom:1px solid var(--rule)}
+.facts dd{margin:6px 0 0;font-size:1.15rem;font-weight:400;letter-spacing:-.02em}
+@media (max-width:820px){.statement,.portrait,.facts{grid-column:1 / -1}}
+
+/* photo frames */
+.ph{position:relative;overflow:hidden;background:#dededb;max-width:100%}
+.dark .ph{background:#1a1a19}
+.ph{margin:0}
+.ph .in{position:absolute;inset:-8% 0;will-change:transform}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.06);transition:filter 1.2s var(--ease),transform 1.6s var(--ease)}
+@media (hover:hover){.ph:hover img{filter:grayscale(0) contrast(1);transform:scale(1.03)}}
+.ph .lab{position:absolute;left:14px;bottom:12px;color:#fff;mix-blend-mode:difference;z-index:2}
+
+/* interlude: full-bleed photo opening up on scroll */
+.interlude{position:relative;height:170vh}
+.ib{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;clip-path:inset(var(--cy,16%) var(--cx,22%))}
+.ib img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 58%;filter:grayscale(1) contrast(1.08);transform:scale(var(--s,1.25))}
+.ib .cap{position:absolute;left:var(--gut);right:var(--gutr);bottom:calc(90px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;gap:16px;color:#fff;flex-wrap:wrap}
+.ib .big{position:absolute;left:var(--gut);top:50%;transform:translateY(-50%);color:#fff;font-weight:200;letter-spacing:-.06em;line-height:.85;font-size:clamp(3rem,11vw,12rem)}
+
+/* results — horizontal */
+#velo{position:relative}
+.pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;align-items:center}
+.track{display:flex;padding-left:var(--gut);padding-right:var(--gutr);will-change:transform}
+.panel{flex:0 0 min(90vw,1240px);min-width:0;padding-right:clamp(40px,6vw,110px);display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(24px,3vw,56px);align-items:center}
+.panel.intro{flex-basis:min(70vw,820px);display:flex;flex-direction:column;align-items:flex-start}
+.p-info{display:flex;flex-direction:column;gap:22px;min-width:0}
+.p-img{height:min(66vh,640px);aspect-ratio:2/3;order:-1}
+.panel + .panel{border-left:1px solid var(--rule);padding-left:clamp(24px,3vw,48px)}
+.p-top{display:flex;gap:28px;flex-wrap:wrap}
+.p-time{font-weight:100;font-size:clamp(4rem,10.5vw,11.5rem);letter-spacing:-.07em;line-height:.8;font-variant-numeric:tabular-nums;white-space:nowrap}
+.p-name{display:flex;flex-wrap:wrap;gap:8px 28px;align-items:baseline}
+.p-name h3{font-weight:300;font-size:clamp(1.5rem,2.8vw,2.5rem);letter-spacing:-.035em}
+.p-rank{font-family:var(--m);font-size:.85rem}
+.best-tag{border:1px solid currentColor;border-radius:999px;padding:3px 10px}
+.bar{display:flex;gap:4px;max-width:680px;height:2px}
+.bar i{display:block}
+.bar .s{background:var(--g2)}.bar .b{background:var(--paper)}.bar .r{background:var(--g1)}
+.legs{display:flex;gap:4px;max-width:680px;font-family:var(--m);font-size:.74rem;color:var(--g1);font-variant-numeric:tabular-nums}
+.legs span{padding-right:14px;white-space:nowrap}
+.legs b{color:var(--paper);font-weight:400;margin-left:6px}
+.intro h2{font-weight:200;font-size:clamp(3rem,7vw,7rem);letter-spacing:-.06em;line-height:.88}
+.season{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:28px;max-width:620px}
+.season .v{font-weight:200;font-size:clamp(2rem,4vw,3.6rem);letter-spacing:-.05em;line-height:1}
+@media (max-width:820px){
+  .pin{position:static;height:auto;display:block;padding-bottom:40px}
+  .track{flex-direction:column;transform:none!important}
+  .panel{flex-basis:auto;padding-right:0;padding-block:48px;grid-template-columns:1fr}
+  .p-img{height:auto;width:100%;aspect-ratio:4/5}
+  .panel + .panel{border-left:0;border-top:1px solid var(--rule);padding-left:0}
+  .legs{flex-wrap:wrap}
+}
+
+/* gallery */
+.gallery{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(12px,1.6vw,22px)}
+.gallery .ph:nth-child(1){grid-column:1 / span 5;aspect-ratio:4/5}
+.gallery .ph:nth-child(2){grid-column:7 / span 4;aspect-ratio:2/3;margin-top:22%}
+.gallery .ph:nth-child(3){grid-column:2 / span 4;aspect-ratio:2/3;margin-top:-6%}
+.gallery .ph:nth-child(4){grid-column:8 / span 5;aspect-ratio:4/5;margin-top:14%}
+@media (max-width:760px){.gallery .ph{grid-column:1 / -1!important;margin-top:0!important}}
+
+/* brands */
+.offers{border-top:1px solid var(--rule);position:relative;isolation:isolate}
+.offer{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:baseline;padding:clamp(24px,3vw,40px) 12px;border-bottom:1px solid var(--rule);position:relative;transition:color .5s var(--ease)}
+.offer h3{font-weight:200;font-size:clamp(2rem,5vw,4.6rem);letter-spacing:-.05em;line-height:1;transition:transform .8s var(--ease)}
+.offer p{color:var(--g1);font-size:1.05rem;transition:color .5s var(--ease)}
+.offer::before{content:"";position:absolute;inset:0;background:var(--ink);transform:scaleY(0);transform-origin:bottom;transition:transform .7s var(--ease);z-index:-1}
+@media (hover:hover){.offer:hover::before{transform:scaleY(1)}.offer:hover{color:var(--paper)}.offer:hover h3{transform:translateX(24px)}.offer:hover p{color:#9a9a97}}
+@media (max-width:700px){.offer{grid-template-columns:1fr;gap:8px}}
+.ig-head{display:grid;grid-template-columns:1fr 3fr;gap:24px;align-items:baseline;padding-top:clamp(90px,12vw,170px)}
+.ig-lede{font-weight:250;font-size:clamp(1.6rem,3.6vw,3.4rem);letter-spacing:-.04em;line-height:1.05;max-width:18ch}
+@media (max-width:760px){.ig-head{grid-template-columns:1fr}}
+.aud{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;padding-block:clamp(48px,6vw,80px) 0}
+.aud > div{border-top:1px solid var(--rule);padding-top:18px}
+.demo{margin-top:clamp(48px,6vw,80px);display:grid;gap:14px;max-width:900px;margin-left:auto}
+.demo .row{display:grid;grid-template-columns:140px minmax(0,1fr) 56px;gap:18px;align-items:center}
+.demo .tr{height:1px;background:var(--rule);position:relative}
+.demo .tr i{position:absolute;left:0;top:-1px;height:3px;background:var(--ink);transform-origin:left;transition:transform 1.6s var(--ease)}
+.demo .pc{font-family:var(--m);font-size:.85rem;text-align:right;font-variant-numeric:tabular-nums}
+.aud .v{font-weight:100;font-size:clamp(2.4rem,5vw,4.6rem);letter-spacing:-.05em;line-height:1}
+@media (max-width:700px){.aud{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* finish */
+.finish{padding-block:clamp(120px,16vw,240px) calc(96px + env(safe-area-inset-bottom,0px))}
+#course{max-height:100%}
+.f-grid{display:grid;grid-template-columns:minmax(0,1fr) min(34vw,520px);gap:clamp(24px,4vw,72px);align-items:end}
+.f-txt{min-width:0}
+.f-img{aspect-ratio:2/3}
+@media (max-width:820px){.f-grid{grid-template-columns:1fr}}
+.finish .clock{font-weight:100;font-size:clamp(4.5rem,13vw,15rem);letter-spacing:-.075em;line-height:.8;font-variant-numeric:tabular-nums}
+.finish .sub{margin-top:28px;font-size:clamp(1.05rem,1.6vw,1.35rem);max-width:30ch}
+.mail{display:inline-block;margin-top:clamp(70px,10vw,140px);font-weight:200;font-size:clamp(1.3rem,3.3vw,3.9rem);letter-spacing:-.05em;line-height:1.05;word-break:break-all;user-select:all;position:relative}
+.mail::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .8s var(--ease)}
+.mail:hover::after{transform:scaleX(1);transform-origin:left}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:40px}
+.btn{position:relative;overflow:hidden;isolation:isolate;display:inline-flex;align-items:center;gap:10px;border:1px solid currentColor;background:transparent;color:inherit;border-radius:999px;padding:15px 28px;font:400 .95rem var(--f);cursor:pointer;transition:color .5s var(--ease)}
+.btn::before{content:"";position:absolute;left:50%;top:100%;width:150%;aspect-ratio:1;border-radius:50%;background:var(--paper);transform:translate(-50%,0) scale(0);transition:transform .7s var(--ease);z-index:-1}
+.btn:hover{color:var(--ink)}
+.btn:hover::before{transform:translate(-50%,-60%) scale(1)}
+#copied{min-height:1.4em;margin-top:16px;color:var(--g1)}
+footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:clamp(80px,10vw,160px);padding-top:18px;border-top:1px solid var(--rule);color:var(--g1)}
+
+.cursor{position:fixed;left:0;top:0;z-index:40;width:8px;height:8px;border-radius:50%;background:#fff;mix-blend-mode:difference;pointer-events:none;transform:translate(-50%,-50%);transition:width .5s var(--ease),height .5s var(--ease);display:none}
+.cursor.big{width:80px;height:80px}
+@media (hover:hover) and (pointer:fine){.cursor{display:block}}
+</style>
+
+</head>
+<body>
+<div class="hud">
+  <a class="logo" href="#top">V. Guilbert</a>
+  <nav class="mono" aria-label="Sections"><a href="#profil">Profil</a><a href="#velo">Résultats</a><a href="#marques">Marques</a><a class="keep" href="#contact">Contact</a></nav>
+  <div class="bl" aria-hidden="true"><span class="mono" id="hudLeg">Nage</span><span class="v" id="hudClock">0:00:00</span></div>
+  <div class="br" aria-hidden="true"><span class="mono">Distance</span><span class="v"><span id="hudKm">0.0</span> / 113 km</span></div>
+</div>
+
+<main id="top">
+  <svg id="course" aria-hidden="true"><path class="ghost" id="ghost"/><path id="line"/><g id="head"><circle r="3.5"/><text x="10" y="4" id="headTxt">0.0 km</text></g></svg>
+
+  <section class="hero pad">
+    <div class="meta mono"><span>Triathlète</span><span class="dim">Montréal, Québec</span><span class="dim">Saison 2026</span></div>
+    <figure class="ph hero-img"><div class="in" data-par="-.06"><img src="img/nage-sortie.jpg" alt="Valentin Guilbert sort de l'eau au Bassin olympique de Montréal" decoding="async"></div><figcaption class="lab mono">Sortie de l’eau · Bassin olympique</figcaption></figure>
+    <h1 class="title" aria-label="Valentin Guilbert"><span class="ln" data-split>Valentin</span><span class="ln r" data-split>Guilbert</span></h1>
+    <div class="foot"><p>Faites défiler. Le chrono tourne.</p><a class="mono dim" href="#profil">↓ Départ</a></div>
+  </section>
+
+  <section id="profil" class="pad">
+    <div class="sh"><span class="mono dim">01 · Nage · 1,9 km</span><h2>Profil</h2></div>
+    <div class="profile">
+      <p class="statement"><span class="ln">Première saison de triathlon.</span><span class="ln">Premier 70.3 en <b>4:42:24</b>.</span><span class="ln">Quatre courses, <b>trois pays</b>.</span></p>
+      <figure class="ph portrait"><div class="in" data-par=".08"><img src="img/portrait.jpg" alt="Portrait de Valentin Guilbert avec son vélo sur le circuit Gilles-Villeneuve" loading="lazy" decoding="async"></div><figcaption class="lab mono">Circuit Gilles-Villeneuve</figcaption></figure>
+      <dl class="facts mono">
+        <div><dt class="dim">Âge</dt><dd>25 ans</dd></div>
+        <div><dt class="dim">Base</dt><dd>Montréal</dd></div>
+        <div><dt class="dim">Formats</dt><dd>Olympique · 70.3</dd></div>
+        <div><dt class="dim">Instagram</dt><dd><a href="https://www.instagram.com/valtri70.3" target="_blank" rel="noopener">@valtri70.3 ↗</a></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="interlude" id="interlude" aria-label="Photo : Valentin à vélo au Challenge Montréal">
+    <div class="ib"><img src="img/montreal-velo.jpg" alt="Valentin Guilbert à vélo devant les gradins du circuit Gilles-Villeneuve" loading="lazy" decoding="async">
+      <p class="big">90 km</p>
+      <div class="cap mono"><span>Challenge Montréal · 12.09.2026</span><span>Circuit Gilles-Villeneuve</span></div>
+    </div>
+  </section>
+
+  <section id="velo" class="dark">
+    <div class="sh pad"><span class="mono dim">02 · Vélo · 90 km</span><h2>Résultats</h2></div>
+    <div class="pin">
+      <div class="track" id="track">
+        <div class="panel intro">
+          <h2>Saison<br>2026</h2>
+          <div class="season">
+            <div><div class="v">4</div><p class="mono dim">Courses</p></div>
+            <div><div class="v">329</div><p class="mono dim">Kilomètres</p></div>
+            <div><div class="v">3</div><p class="mono dim">Pays</p></div>
+          </div>
+        </div>
+        <article class="panel"><div class="p-info">
+          <div class="p-top mono dim"><span>07.06</span><span>Olympique</span><span>Rouville, QC</span></div>
+          <div class="p-time">2:24:07</div>
+          <div class="p-name"><h3>Triathlon de Rouville</h3><span class="p-rank">6e / 74 · 3e 25-29</span></div>
+          <div class="bar"><i class="s" style="flex:1854"></i><i class="b" style="flex:3887"></i><i class="r" style="flex:2618"></i></div>
+          <div class="legs"><span>Nage<b>30:54</b></span><span>Vélo<b>1:04:47</b></span><span>Course<b>43:38</b></span></div>
+        </div>
+          <figure class="ph p-img"><div class="in" data-par="0"><img src="img/rouville-course.jpg" alt="Valentin Guilbert en course à pied au Triathlon de Rouville, dossard 44" loading="lazy" decoding="async"></div><figcaption class="lab mono">Rouville · course à pied</figcaption></figure>
+        </article>
+        <article class="panel"><div class="p-info">
+          <div class="p-top mono dim"><span>26.07</span><span>70.3</span><span>Augusta, Maine</span></div>
+          <div class="p-time">4:42:24</div>
+          <div class="p-name"><h3>Ironman 70.3 Maine</h3><span class="p-rank">116e / 2 084 · top 6 %</span></div>
+          <div class="bar"><i class="s" style="flex:1445"></i><i class="b" style="flex:8878"></i><i class="r" style="flex:6247"></i></div>
+          <div class="legs"><span>Nage<b>24:05</b></span><span>Vélo<b>2:27:58</b></span><span>Course<b>1:44:07</b></span></div>
+        </div>
+          <figure class="ph p-img"><div class="in" data-par="0"><img src="img/maine-velo.jpg" alt="Valentin Guilbert en position aéro au IRONMAN 70.3 Maine, dossard 1642" loading="lazy" decoding="async"></div><figcaption class="lab mono">70.3 Maine · vélo</figcaption></figure>
+        </article>
+        <article class="panel"><div class="p-info">
+          <div class="p-top mono dim"><span>12.09</span><span>Olympique</span><span>Montréal, QC</span><span class="best-tag">Meilleure course</span></div>
+          <div class="p-time">2:07:13</div>
+          <div class="p-name"><h3>Challenge Montréal</h3><span class="p-rank">18e / 1 418 · top 2 %</span></div>
+          <div class="bar"><i class="s" style="flex:1628"></i><i class="b" style="flex:3429"></i><i class="r" style="flex:2398"></i></div>
+          <div class="legs"><span>Nage<b>27:08</b></span><span>Vélo<b>57:09</b></span><span>Course<b>39:58</b></span></div>
+        </div>
+          <figure class="ph p-img"><div class="in" data-par="0"><img src="img/montreal-aero.jpg" alt="Valentin Guilbert en position aéro au Challenge Montréal, dossard 4087" loading="lazy" decoding="async"></div><figcaption class="lab mono">Challenge Montréal · vélo</figcaption></figure>
+        </article>
+        <article class="panel"><div class="p-info">
+          <div class="p-top mono dim"><span>10.10</span><span>70.3</span><span>Mont-Saint-Michel, FR</span></div>
+          <div class="p-time">5:01:37</div>
+          <div class="p-name"><h3>Bayman</h3><span class="p-rank">80e / 872</span></div>
+          <div class="bar"><i class="s" style="flex:2094"></i><i class="b" style="flex:9160"></i><i class="r" style="flex:6549"></i></div>
+          <div class="legs"><span>Nage<b>34:54</b></span><span>Vélo<b>2:32:40</b></span><span>Course<b>1:49:09</b></span></div>
+        </div>
+          <figure class="ph p-img"><div class="in" data-par="0"><img src="img/velo-circuit-large.jpg" alt="Valentin Guilbert à l’entraînement sur le circuit Gilles-Villeneuve" loading="lazy" decoding="async"></div><figcaption class="lab mono">Entraînement · Montréal</figcaption></figure>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="marques" class="pad">
+    <div class="sh"><span class="mono dim">03 · Course · 21,1 km</span><h2>Marques</h2></div>
+    <div class="gallery">
+      <figure class="ph"><div class="in" data-par=".08"><img src="img/rouville-velo.jpg" alt="Valentin Guilbert à vélo au Triathlon de Rouville" loading="lazy" decoding="async"></div><figcaption class="lab mono">Rouville · vélo</figcaption></figure>
+      <figure class="ph"><div class="in" data-par="-.12"><img src="img/montreal-course.jpg" alt="Valentin Guilbert court le long du Bassin olympique" loading="lazy" decoding="async"></div><figcaption class="lab mono">Bassin olympique · course</figcaption></figure>
+      <figure class="ph"><div class="in" data-par=".14"><img src="img/velo-circuit.jpg" alt="Valentin Guilbert à vélo sur le circuit Gilles-Villeneuve" loading="lazy" decoding="async"></div><figcaption class="lab mono">Circuit Gilles-Villeneuve</figcaption></figure>
+      <figure class="ph"><div class="in" data-par="-.08"><img src="img/portrait-2.jpg" alt="Valentin Guilbert debout avec son vélo, Montréal en arrière-plan" loading="lazy" decoding="async"></div><figcaption class="lab mono">Montréal</figcaption></figure>
+    </div>
+    <div class="offers" style="margin-top:clamp(100px,14vw,200px)">
+      <div class="offer"><h3>Contenu</h3><p>Photos et vidéos de course et d'entraînement.</p></div>
+      <div class="offer"><h3>Tests terrain</h3><p>Vos produits testés en conditions réelles.</p></div>
+      <div class="offer"><h3>Visibilité</h3><p>Votre marque en course, au Canada, aux États-Unis et en France.</p></div>
+    </div>
+    <div class="ig-head"><p class="mono dim">Instagram · <a href="https://www.instagram.com/valtri70.3" target="_blank" rel="noopener">@valtri70.3 ↗</a></p><p class="ig-lede">Mes vidéos touchent bien au-delà de mes abonnés.</p></div>
+    <div class="aud">
+      <div><div class="v">272 k</div><p class="mono dim">Vues sur un reel</p></div>
+      <div><div class="v">108 k</div><p class="mono dim">Vues · 90 jours</p></div>
+      <div><div class="v">45 k</div><p class="mono dim">Comptes touchés · 90 jours</p></div>
+      <div><div class="v">3,8 k</div><p class="mono dim">Interactions · 90 jours</p></div>
+    </div>
+    <div class="demo">
+      <div class="row"><span class="mono">25-44 ans</span><span class="tr"><i style="width:69.8%"></i></span><span class="pc">70 %</span></div>
+      <div class="row"><span class="mono">Hommes</span><span class="tr"><i style="width:78.6%"></i></span><span class="pc">79 %</span></div>
+      <div class="row"><span class="mono">Francophones</span><span class="tr"><i style="width:46.9%"></i></span><span class="pc">47 %</span></div>
+      <div class="row"><span class="mono">France</span><span class="tr"><i style="width:30%"></i></span><span class="pc">30 %</span></div>
+      <div class="row"><span class="mono">Canada</span><span class="tr"><i style="width:16.6%"></i></span><span class="pc">17 %</span></div>
+    </div>
+    <p class="mono dim" style="margin-top:20px">Source : statistiques Instagram, novembre 2026 · 540 abonnés</p>
+  </section>
+
+  <section id="contact" class="dark" style="margin-top:clamp(110px,16vw,240px)">
+    <div class="finish pad">
+      <div class="f-grid"><div class="f-txt">
+      <p class="mono dim">Arrivée · 113 km</p>
+      <div class="clock" style="margin-top:24px">4:42:24</div>
+      <p class="sub">Mon premier 70.3. Et vous venez de le finir avec moi.</p>
+      <span class="mail" id="email">valentin.guilbert50@gmail.com</span>
+      <div class="ctas">
+        <button class="btn" id="copy" type="button">Copier l'adresse</button>
+        <a class="btn" href="https://www.instagram.com/valtri70.3" target="_blank" rel="noopener">Instagram ↗</a>
+      </div>
+      <p class="mono" id="copied" aria-live="polite"></p>
+      </div>
+      <figure class="ph f-img"><div class="in" data-par=".06"><img src="img/montreal-arrivee.jpg" alt="Valentin Guilbert franchit l’arrivée du Challenge Montréal en 2:07:13" loading="lazy" decoding="async"></div><figcaption class="lab mono">Arrivée · Challenge Montréal · 2:07:13</figcaption></figure>
+      </div>
+      <footer class="mono"><span>© 2026 Valentin Guilbert</span><a href="#top">Retour au départ ↑</a></footer>
+    </div>
+  </section>
+</main>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function clamp(v,a,b){return v<a?a:v>b?b:v}
+
+  /* split hero letters */
+  var k=0;
+  document.querySelectorAll('[data-split]').forEach(function(el){
+    var t=el.textContent;el.textContent='';
+    for(var i=0;i<t.length;i++){var s=document.createElement('span');s.className='ch';s.style.setProperty('--i',k++);s.textContent=t[i];el.appendChild(s);}
+  });
+
+  /* copy */
+  $('copy').addEventListener('click',function(){
+    var m=$('email'),o=$('copied');
+    function sel(){var r=document.createRange();r.selectNodeContents(m);var s=getSelection();s.removeAllRanges();s.addRange(r);o.textContent="Adresse sélectionnée · Ctrl+C ou ⌘+C";}
+    try{navigator.clipboard.writeText(m.textContent).then(function(){o.textContent="Adresse copiée";},sel);}catch(e){sel();}
+  });
+
+  /* smooth scroll */
+  var lenis=null;
+  if(!reduce&&window.Lenis){try{lenis=new Lenis({lerp:.09,smoothWheel:true});document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();lenis.scrollTo(t);}});});}catch(e){lenis=null;}}
+
+  /* horizontal results */
+  var velo=$('velo'),track=$('track'),head=velo.querySelector('.sh'),dist=0,wide=false;
+  function layoutVelo(){
+    wide=innerWidth>820;
+    if(!wide){velo.style.height='';track.style.transform='';dist=0;return;}
+    dist=Math.max(0,track.scrollWidth-innerWidth);
+    velo.style.height=(head.offsetHeight+dist+innerHeight)+'px';
+  }
+
+  /* course line */
+  var svg=$('course'),line=$('line'),ghost=$('ghost'),hd=$('head'),htxt=$('headTxt'),main=document.querySelector('main'),L=0,H=0,y0=0;
+  function buildPath(){
+    svg.setAttribute('height',0);svg.style.height='0px';
+    var W=main.clientWidth,ct=$('contact');H=Math.round(ct.offsetTop+ct.offsetHeight);svg.setAttribute('width',W);svg.setAttribute('height',H);svg.style.height=H+'px';
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    y0=document.querySelector('.hero').offsetHeight*.8;
+    var step=Math.max(520,innerHeight*.9),pts=[],y=y0,i=0;
+    var xs=[.88,.12,.7,.06,.94,.3,.82,.18];
+    pts.push([W*.6,y0]);
+    while(y<H-200){y+=step;i++;pts.push([W*xs[i%xs.length],Math.min(y,H-120)]);}
+    var d='M'+pts[0][0]+' '+pts[0][1];
+    for(var j=1;j<pts.length;j++){var a=pts[j-1],b=pts[j],my=(b[1]-a[1])*.55;d+=' C'+a[0]+' '+(a[1]+my)+' '+b[0]+' '+(b[1]-my)+' '+b[0]+' '+b[1];}
+    line.setAttribute('d',d);ghost.setAttribute('d',d);
+    L=line.getTotalLength();line.style.strokeDasharray=L;line.style.strokeDashoffset=L;
+  }
+  function lenAtY(ty){var lo=0,hi=L;for(var n=0;n<22;n++){var mid=(lo+hi)/2;if(line.getPointAtLength(mid).y<ty)lo=mid;else hi=mid;}return lo;}
+
+  /* race phase */
+  var A=[];
+  function topOf(el){return el.getBoundingClientRect().top+scrollY;}
+  function anchors(){A=[0,topOf(velo)-innerHeight*.3,topOf($('marques'))-innerHeight*.2,topOf($('contact'))-innerHeight*.5];}
+  function phase(){var y=scrollY,max=document.documentElement.scrollHeight-innerHeight;if(y>=max-2||y>=A[3])return 3;for(var i=0;i<3;i++)if(y<A[i+1])return i+(y-A[i])/(A[i+1]-A[i]);return 3;}
+  function fmt(s){s=Math.round(s);var h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return h+':'+(m<10?'0':'')+m+':'+(x<10?'0':'')+x;}
+  var legs=['Nage','Vélo','Course','Arrivée'];
+  function hud(p){
+    var s,km;
+    if(p<1){s=p*1445;km=p*1.9}else if(p<2){s=1632+(p-1)*8878;km=1.9+(p-1)*90}else if(p<3){s=10697+(p-2)*6247;km=91.9+(p-2)*21.1}else{s=16944;km=113}
+    $('hudClock').textContent=fmt(s);$('hudKm').textContent=km.toFixed(1);htxt.textContent=km.toFixed(1)+' km';
+    $('hudLeg').textContent=legs[Math.min(3,Math.floor(p+1e-6))];
+  }
+
+  var inter=$('interlude'),ib=inter.querySelector('.ib');
+  function interlude(){var r=inter.getBoundingClientRect();var pr=clamp(-r.top/(r.height-innerHeight),0,1);if(reduce)pr=1;var e=1-Math.pow(1-clamp(pr*1.6,0,1),3);
+    ib.style.setProperty('--cy',(16*(1-e))+'%');ib.style.setProperty('--cx',(22*(1-e))+'%');ib.style.setProperty('--s',(1.25-.25*e));}
+  var pars=[].slice.call(document.querySelectorAll('[data-par]'));
+  var P=0,Ps=0;
+  function update(){
+    P=phase();interlude();
+    if(wide&&dist){var r=velo.getBoundingClientRect();var pr=clamp(-(r.top+head.offsetHeight)/dist,0,1);track.style.transform='translate3d('+(-pr*dist)+'px,0,0)';}
+    if(!reduce)pars.forEach(function(el){var r=el.parentElement.getBoundingClientRect();var c=(r.top+r.height/2-innerHeight/2);el.style.transform='translate3d(0,'+(c*parseFloat(el.dataset.par))+'px,0)';});
+    if(L){var ty=clamp(scrollY+innerHeight*.62,y0,H);var l=lenAtY(ty);line.style.strokeDashoffset=L-l;var pt=line.getPointAtLength(l);hd.setAttribute('transform','translate('+pt.x+','+pt.y+')');
+      htxt.setAttribute('x',pt.x>main.clientWidth-120?-80:10);}
+  }
+  function layout(){layoutVelo();anchors();buildPath();update();}
+
+  function raf(t){if(lenis)lenis.raf(t);update();Ps+=(P-Ps)*(reduce?1:.1);hud(Ps);requestAnimationFrame(raf);}
+  addEventListener('resize',layout);
+  layout();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);
+  addEventListener('load',layout);
+  if(window.ResizeObserver){var rt;var ro=new ResizeObserver(function(){clearTimeout(rt);rt=setTimeout(layout,120);});document.querySelectorAll('main > section').forEach(function(s){ro.observe(s);});}
+  requestAnimationFrame(raf);
+
+  /* cursor */
+  if(matchMedia('(hover:hover) and (pointer:fine)').matches){
+    var c=$('cursor'),x=innerWidth/2,y=innerHeight/2,cx=x,cy=y;
+    addEventListener('mousemove',function(e){x=e.clientX;y=e.clientY;});
+    document.querySelectorAll('a,button,.mail,.offer').forEach(function(el){el.addEventListener('mouseenter',function(){c.classList.add('big')});el.addEventListener('mouseleave',function(){c.classList.remove('big')});});
+    (function mv(){cx+=(x-cx)*.2;cy+=(y-cy)*.2;c.style.left=cx+'px';c.style.top=cy+'px';requestAnimationFrame(mv);})();
+  }
+})();
+</script>
+
+</body>
+</html>
